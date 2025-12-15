@@ -375,5 +375,92 @@ router.post('/chats/profile-picture', checkSession, async (req, res) => {
     }
 });
 
+// ==================== CHAT HISTORY API ====================
+
+/**
+ * Get chats overview - hanya chat yang punya pesan
+ * Body: { sessionId, limit?, offset?, type? }
+ * type: 'all' | 'personal' | 'group'
+ */
+router.post('/chats/overview', checkSession, async (req, res) => {
+    try {
+        const { limit = 50, offset = 0, type = 'all' } = req.body;
+        const result = await req.session.getChatsOverview(limit, offset, type);
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+/**
+ * Get contacts list - semua kontak yang tersimpan
+ * Body: { sessionId, limit?, offset?, search? }
+ */
+router.post('/contacts', checkSession, async (req, res) => {
+    try {
+        const { limit = 100, offset = 0, search = '' } = req.body;
+        const result = await req.session.getContacts(limit, offset, search);
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+/**
+ * Get messages from any chat (personal or group)
+ * Body: { sessionId, chatId, limit?, cursor? }
+ * chatId: phone number (628xxx) or group id (xxx@g.us)
+ */
+router.post('/chats/messages', checkSession, async (req, res) => {
+    try {
+        const { chatId, limit = 50, cursor = null } = req.body;
+        
+        if (!chatId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required field: chatId'
+            });
+        }
+        
+        const result = await req.session.getChatMessages(chatId, limit, cursor);
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+/**
+ * Get chat info/detail (personal or group)
+ * Body: { sessionId, chatId }
+ */
+router.post('/chats/info', checkSession, async (req, res) => {
+    try {
+        const { chatId } = req.body;
+        
+        if (!chatId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required field: chatId'
+            });
+        }
+        
+        const result = await req.session.getChatInfo(chatId);
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
 
 module.exports = router;

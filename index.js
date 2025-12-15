@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
                 qrImage: 'GET /api/whatsapp/sessions/:sessionId/qr/image',
                 delete: 'DELETE /api/whatsapp/sessions/:sessionId'
             },
-            chats: {
+            chat: {
                 sendText: 'POST /api/whatsapp/chats/send-text',
                 sendImage: 'POST /api/whatsapp/chats/send-image',
                 sendDocument: 'POST /api/whatsapp/chats/send-document',
@@ -36,7 +36,14 @@ app.get('/', (req, res) => {
                 sendContact: 'POST /api/whatsapp/chats/send-contact',
                 sendButton: 'POST /api/whatsapp/chats/send-button',
                 checkNumber: 'POST /api/whatsapp/chats/check-number',
-                profilePicture: 'POST /api/whatsapp/chats/profile-picture'
+                profilePicture: 'POST /api/whatsapp/chats/profile-picture',
+                contactInfo: 'POST /api/whatsapp/chats/contact-info'
+            },
+            history: {
+                overview: 'POST /api/whatsapp/chats/overview { sessionId, limit?, offset?, type? }',
+                contacts: 'POST /api/whatsapp/contacts { sessionId, limit?, offset?, search? }',
+                messages: 'POST /api/whatsapp/chats/messages { sessionId, chatId, limit?, cursor? }',
+                info: 'POST /api/whatsapp/chats/info { sessionId, chatId }'
             }
         }
     });
