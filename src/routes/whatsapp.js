@@ -296,6 +296,13 @@ router.delete('/sessions/:sessionId', async (req, res) => {
 
 // Middleware untuk check session dari body
 const checkSession = (req, res, next) => {
+    if (!req.body) {
+        return res.status(400).json({
+            success: false,
+            message: 'Request body is required'
+        });
+    }
+    
     const { sessionId } = req.body;
     
     if (!sessionId) {
